@@ -13,16 +13,18 @@ app.use(cors());
 app.get("/", (req, res, next)=>{res.send("hello")} )
 // Fetch YouTube Playlist URLs
 app.get("/api/playlist", async (req, res) => {
-  const playlistId = "PLxA687tYuMWhkqYjvAGtW_heiEL4Hk_Lx";
-  const youtubeApiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${YOUTUBE_API_KEY}&playlistId=${playlistId}&type=video&part=snippet&maxResults=10`;
+  const PLAY_LIST_ID = process.env.PLAY_LIST_ID;
+  const youtubeApiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${YOUTUBE_API_KEY}&playlistId=${PLAY_LIST_ID}&type=video&part=snippet&maxResults=10`;
   console.log("Fetching data from googleapis");
   
   try {
     const response = await axios.get(youtubeApiUrl);
     const videoUrls = response.data.items.map((item) => {
       const videoId = item.snippet.resourceId.videoId;
-      return `https://www.youtube.com/watch?v=${videoId}`;
+      return `${videoId}`;
     });
+    console.log("videoUrls : " + videoUrls);
+    
     res.json({ urls: videoUrls });
   } catch (err) {
     console.error("Error fetching playlist items:", err);

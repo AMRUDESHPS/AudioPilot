@@ -8,13 +8,17 @@ fetchPlaylistButton.addEventListener("click", async () => {
     const data = await response.json();
 
     videoList.innerHTML = "";
+    console.log("data.urls:" + data);
     data.urls.forEach((url) => {
       const listItem = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = `http://localhost:9000/api/download?url=${url}`;
-      link.textContent = url;
-      link.target = "_blank";
-      listItem.appendChild(link);
+      // Create iframe
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${url}`;
+      iframe.width = "560";
+      iframe.height = "315";
+      iframe.allowFullscreen = true;
+      // Append elements
+      listItem.appendChild(iframe);
       videoList.appendChild(listItem);
     });
   } catch (error) {
